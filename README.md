@@ -61,6 +61,7 @@ Before creating an S3 bucket, set up a **VPC (Virtual Private Cloud)** to ensure
 ### 🔹 Create a VPC
 
 ```sh
+aws configure #Then Enter your access key ,secret accesskey and region.
 aws ec2 create-vpc --cidr-block 10.0.0.0/16
 ```
 
