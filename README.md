@@ -179,7 +179,82 @@ airflow scheduler &
 
 ---
 
-## 🛠️ Step 5: Troubleshooting
+## ❄️ Step 6: Setting Up Snowflake for Data Storage and Querying
+
+Now that the ETL pipeline has processed the data and stored it in Amazon S3, the next step is to load it into **Snowflake** for further analysis.
+
+### 🏗️ Creating a Snowflake Account
+
+1. **Sign up for a Snowflake account** [here](https://signup.snowflake.com/).
+2. **Login to the Snowflake console** and navigate to the **Worksheets** section.
+3. **Create a new worksheet** to run SQL queries.
+
+### 📌 Executing Snowflake Queries
+
+1. Open the `snowflake_dbscripts.txt` file.
+2. Copy each SQL query and execute it in Snowflake.
+3. Ensure you **replace the S3 bucket name** with your actual bucket where the final cleaned CSV is stored.
+
+#### Example Query to Create an External Stage:
+```sql
+CREATE OR REPLACE STAGE redfin_stage
+URL = 's3://redfin-emr-project/transformed-data/'
+FILE_FORMAT = (TYPE = 'CSV' FIELD_OPTIONALLY_ENCLOSED_BY='"');
+```
+
+#### Example Query to Load Data into Snowflake Table:
+```sql
+COPY INTO redfin_housing_data
+FROM @redfin_stage
+FILE_FORMAT = (TYPE = 'CSV' FIELD_OPTIONALLY_ENCLOSED_BY='"')
+ON_ERROR = 'CONTINUE';
+```
+
+### 🔍 Verify Data in Snowflake
+Run the following query to verify the loaded data:
+```sql
+SELECT * FROM redfin_housing_data LIMIT 10;
+```
+
+![](images/Screenshot_67.jpg)
+
+![](images/1.jpg)
+
+---
+
+## 📊 Step 7: Connecting Snowflake to a BI Tool
+
+Once the data is available in Snowflake, it can be visualized using **BI tools** like **Tableau, Power BI, or Looker**.
+
+### 🛠️ Connecting Snowflake to Power BI
+
+Follow these steps to integrate Snowflake with Power BI:
+
+1. Open **Power BI Desktop**.
+2. Click on **Get Data** → **More**.
+
+![](images/2.jpg)
+3. Select **Snowflake** as the data source.
+4. Enter the **Snowflake account URL**.
+
+![](images/3.jpg)
+5. Provide **username & password**.
+
+![](images/4.jpg)
+6. Select the **warehouse, database, and schema**.
+
+![](images/5.jpg)
+7. Load the data into Power BI and start creating dashboards.
+---
+
+## 🎥 Final Output: Watch the Data Pipeline in Action!
+
+Check out the complete execution of the **Automated Big Data ETL Pipeline** in the following GIF:
+
+![](images/powerbi.gif)
+
+---
+## 🛠️ Troubleshooting
 
 ### ❗ Common Issues & Fixes
 
@@ -189,12 +264,17 @@ airflow scheduler &
 
 ---
 
-## ✅ Conclusion
+## 🚀 Conclusion
 
-✔️ Fully automated **ETL pipeline** with Apache Airflow 📚  
-✔️ Scalable **Spark jobs** on AWS EMR 📊  
-✔️ Secure **data storage** in Amazon S3 & Snowflake ❄️  
-✔️ Seamless **orchestration** for big data processing 🎯  
+This end-to-end **Big Data ETL Pipeline** demonstrates how to automate data processing using **AWS EMR, Apache Airflow, and Snowflake**. By following this approach, organizations can efficiently handle large-scale data transformations and integrate with BI tools for analysis.
 
-For any queries, feel free to contribute to the project! 🙌
+### ✅ Key Takeaways:
+- Used **Apache Airflow** to automate the ETL process.
+- Processed raw data using **Spark on AWS EMR**.
+- Stored the transformed data in **Amazon S3**.
+- Loaded the cleaned data into **Snowflake**.
+- Connected Snowflake to **Power BI** for data visualization.
+
+For any questions or improvements, feel free to drop a comment below! 🚀
+ 
 
